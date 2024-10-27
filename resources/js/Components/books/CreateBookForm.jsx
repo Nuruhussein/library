@@ -10,6 +10,8 @@ const CreateBookForm = ({ authors, categories }) => {
         isbn: "",
         publication_date: "",
         cover_image: null,
+        comment: "", // For review comment
+        reviewer: "", // For reviewer's name
     });
 
     const handleSubmit = (e) => {
@@ -19,6 +21,8 @@ const CreateBookForm = ({ authors, categories }) => {
 
     return (
         <form onSubmit={handleSubmit}>
+            {/* Book Information Section */}
+            <h2>Book Information</h2>
             <div>
                 <label>Title</label>
                 <input
@@ -27,9 +31,8 @@ const CreateBookForm = ({ authors, categories }) => {
                     onChange={(e) => setData("title", e.target.value)}
                     required
                 />
-                {errors.title && <div className="error">{errors.title}</div>}
+                {errors.title && <span>{errors.title}</span>}
             </div>
-
             <div>
                 <label>Author</label>
                 <select
@@ -44,11 +47,8 @@ const CreateBookForm = ({ authors, categories }) => {
                         </option>
                     ))}
                 </select>
-                {errors.author_id && (
-                    <div className="error">{errors.author_id}</div>
-                )}
+                {errors.author_id && <span>{errors.author_id}</span>}
             </div>
-
             <div>
                 <label>Category</label>
                 <select
@@ -63,23 +63,16 @@ const CreateBookForm = ({ authors, categories }) => {
                         </option>
                     ))}
                 </select>
-                {errors.category_id && (
-                    <div className="error">{errors.category_id}</div>
-                )}
+                {errors.category_id && <span>{errors.category_id}</span>}
             </div>
-
             <div>
                 <label>Description</label>
                 <textarea
                     value={data.description}
                     onChange={(e) => setData("description", e.target.value)}
-                    required
                 />
-                {errors.description && (
-                    <div className="error">{errors.description}</div>
-                )}
+                {errors.description && <span>{errors.description}</span>}
             </div>
-
             <div>
                 <label>ISBN</label>
                 <input
@@ -87,9 +80,8 @@ const CreateBookForm = ({ authors, categories }) => {
                     value={data.isbn}
                     onChange={(e) => setData("isbn", e.target.value)}
                 />
-                {errors.isbn && <div className="error">{errors.isbn}</div>}
+                {errors.isbn && <span>{errors.isbn}</span>}
             </div>
-
             <div>
                 <label>Publication Date</label>
                 <input
@@ -100,22 +92,39 @@ const CreateBookForm = ({ authors, categories }) => {
                     }
                 />
                 {errors.publication_date && (
-                    <div className="error">{errors.publication_date}</div>
+                    <span>{errors.publication_date}</span>
                 )}
             </div>
-
             <div>
                 <label>Cover Image</label>
                 <input
                     type="file"
                     onChange={(e) => setData("cover_image", e.target.files[0])}
                 />
-                {errors.cover_image && (
-                    <div className="error">{errors.cover_image}</div>
-                )}
+                {errors.cover_image && <span>{errors.cover_image}</span>}
             </div>
 
-            <button type="submit">Add Book</button>
+            {/* Review Section */}
+            <h2>Add Review</h2>
+            <div>
+                <label>Comment</label>
+                <textarea
+                    value={data.comment}
+                    onChange={(e) => setData("comment", e.target.value)}
+                />
+                {errors.comment && <span>{errors.comment}</span>}
+            </div>
+            <div>
+                <label>Reviewer</label>
+                <input
+                    type="text"
+                    value={data.reviewer}
+                    onChange={(e) => setData("reviewer", e.target.value)}
+                />
+                {errors.reviewer && <span>{errors.reviewer}</span>}
+            </div>
+
+            <button type="submit">Add Book and Review</button>
         </form>
     );
 };

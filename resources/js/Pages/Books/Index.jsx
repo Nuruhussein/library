@@ -3,6 +3,7 @@ import CreateBookForm from "@/Components/books/CreateBookForm";
 import React from "react";
 
 const BooksIndex = ({ books, authors, categories }) => {
+    // console.log(authors);
     return (
         <div>
             <h1>Books</h1>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@inertiajs/react";
 
 const BookTable = ({ books }) => {
     return (
@@ -12,6 +13,7 @@ const BookTable = ({ books }) => {
                     <th>ISBN</th>
                     <th>Publication Date</th>
                     <th>Cover Image</th>
+                    <th>Reviews</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +35,14 @@ const BookTable = ({ books }) => {
                             ) : (
                                 "No Image"
                             )}
+                        </td>
+                        <td>
+                            <Link
+                                href={`/books/${book.id}/reviews`}
+                                className="btn"
+                            >
+                                View Reviews
+                            </Link>
                         </td>
                     </tr>
                 ))}

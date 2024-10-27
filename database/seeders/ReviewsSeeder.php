@@ -12,7 +12,8 @@ class ReviewsSeeder extends Seeder
         Review::create([
             'book_id' => 1,
             // 'user_id' => 1, // Corresponding user ID
-            'comment' => 'Great book on history!'
+            'comment' => 'Great book on history!',
+            'reviewer'=>'moh'
         ]);
         // Add more reviews as needed
     }

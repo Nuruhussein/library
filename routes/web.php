@@ -7,6 +7,8 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReviewController;
+
 
 
 
@@ -18,6 +20,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/books/{book}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');

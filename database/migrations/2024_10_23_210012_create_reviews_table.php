@@ -12,6 +12,8 @@ class CreateReviewsTable extends Migration
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             // $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('comment');
+            $table->string('reviewer')->nullable();
+
             $table->timestamps();
         });
     }

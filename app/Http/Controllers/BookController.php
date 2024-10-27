@@ -1,20 +1,79 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Book;
-use App\Models\Author; // Add this line to import the Author model
-use App\Models\Category; // Import Category if you're using it as well
+use App\Models\Author;
+use App\Models\Category;
+use App\Models\Review;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+
 
 class BookController extends Controller
 {
-   public function index()
+    // Show the form to create a new book
+    public function create()
+    {
+        $authors = Author::all();
+        $categories = Category::all();
+
+        return inertia('Books/Index', [
+            'authors' => $authors,
+            'categories' => $categories,
+        ]);
+    }
+
+    // Store a new book and an optional initial review
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'author_id' => 'required|exists:authors,id',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'nullable|string',
+            'isbn' => 'nullable|string|max:20',
+            'publication_date' => 'nullable|date',
+            'cover_image' => 'nullable|image|max:2048', // Limit file size to 2MB
+            'comment' => 'nullable|string',
+            'reviewer' => 'nullable|string|max:255',
+        ]);
+
+        // Handle file upload if there's a cover image
+        if ($request->hasFile('cover_image')) {
+            $filePath = $request->file('cover_image')->store('cover_images', 'public');
+            $validatedData['cover_image'] = $filePath;
+        }
+
+        // Create the book
+        $book = Book::create([
+            'title' => $validatedData['title'],
+            'author_id' => $validatedData['author_id'],
+            'category_id' => $validatedData['category_id'],
+            'description' => $validatedData['description'] ?? null,
+            'isbn' => $validatedData['isbn'] ?? null,
+            'publication_date' => $validatedData['publication_date'] ?? null,
+            'cover_image' => $validatedData['cover_image'] ?? null,
+        ]);
+
+        // If a comment and reviewer are provided, create an initial review
+        if (!empty($validatedData['comment']) && !empty($validatedData['reviewer'])) {
+            $book->reviews()->create([
+                'comment' => $validatedData['comment'],
+                'reviewer' => $validatedData['reviewer'],
+            ]);
+        }
+
+        return redirect()->route('books.index')->with('success', 'Book and review added successfully');
+    }
+
+public function index()
 {
-    $books = Book::with(['author', 'category'])->get();
-    $authors = Author::all();
-    $categories = Category::all();
+    $books = Book::with('author', 'category')->get(); // Fetch books with authors and categories
+    $authors = Author::all(); // Fetch all authors
+    $categories = Category::all(); // Fetch all categories
+
     return Inertia::render('Books/Index', [
         'books' => $books,
         'authors' => $authors,
@@ -22,46 +81,13 @@ class BookController extends Controller
     ]);
 }
 
-
-   public function create()
-{
-    $authors = Author::all();
-    $categories = Category::all();
-    return Inertia::render('Books/Create', [
-        'authors' => $authors,
-        'categories' => $categories,
-    ]);
-}
-
-
- public function store(Request $request)
+    // Show a specific book and its reviews
+    public function show($id)
     {
-        // Validate incoming request
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|exists:authors,id',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'nullable|string',
-            'isbn' => 'nullable|string|max:13',
-            'publication_date' => 'nullable|date',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        $book = Book::with(['author', 'category', 'reviews'])->findOrFail($id);
+
+        return inertia('Books/Show', [
+            'book' => $book,
         ]);
-
-        // Handle cover image upload if it exists
-        if ($request->hasFile('cover_image')) {
-            $validatedData['cover_image'] = $request->file('cover_image')->store('cover_images', 'public');
-        }
-
-        // Create a new book record
-        Book::create($validatedData);
-
-        return redirect()->route('books.index')->with('success', 'Book created successfully.');
-    }
-
-
-    public function show(Book $book)
-    {
-        $book->load(['author', 'category']); // Eager load author and category for the show method
-        return Inertia::render('Books/Show', ['book' => $book]);
     }
 }
