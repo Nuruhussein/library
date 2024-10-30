@@ -1,8 +1,12 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { Link } from "@inertiajs/react";
 import AuthenticatedLayout from "./AuthenticatedLayout";
+import Dropdown from "@/Components/Dropdown";
+import { usePage } from "@inertiajs/react";
+import { FaHome, FaBook, FaUser, FaTags, FaStar } from "react-icons/fa";
 
 export default function Sidebar({ children }) {
+    const user = usePage().props.auth.user;
     return (
         <AuthenticatedLayout>
             <div>
@@ -112,32 +116,51 @@ export default function Sidebar({ children }) {
                                         ></path>
                                     </svg>
                                 </button>
-
-                                {/* <a
-                                    href="#"
-                                    className="hidden sm:inline-flex ml-5 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center mr-3"
-                                >
-                                    <svg
-                                        className="svg-inline--fa fa-gem -ml-1 mr-2 h-4 w-4"
-                                        aria-hidden="true"
-                                        focusable="false"
-                                        data-prefix="fas"
-                                        data-icon="gem"
-                                        role="img"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512"
-                                    >
-                                        <path
-                                            fill="currentColor"
-                                            d="M378.7 32H133.3L256 182.7L378.7 32zM512 192l-107.4-141.3L289.6 192H512zM107.4 50.67L0 192h222.4L107.4 50.67zM244.3 474.9C247.3 478.2 251.6 480 256 480s8.653-1.828 11.67-5.062L510.6 224H1.365L244.3 474.9z"
-                                        ></path>
-                                    </svg>
-                                    Upgrade to Pro
-                                </a> */}
+                                <div className="pr-8">
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <button className="px-4 py-2 text-sm font-medium flex text-gray-700 bg-white border border-gray-300 rounded-md shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <p>{user.name}</p>
+                                                <span className="mt-1">
+                                                    {" "}
+                                                    <svg
+                                                        className="-me-0.5 ms-2 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        </Dropdown.Trigger>
+                                        <Dropdown.Content>
+                                            <Dropdown.Link
+                                                href={route("profile.edit")}
+                                            >
+                                                Profile
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("logout")}
+                                                method="post"
+                                                as="button"
+                                            >
+                                                Log Out
+                                            </Dropdown.Link>
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </nav>
+                {/* end of nav */}
+
+                {/*   sidebar */}
                 <div className="flex overflow-hidden bg-white pt-16">
                     <aside
                         id="sidebar"
@@ -182,23 +205,59 @@ export default function Sidebar({ children }) {
                                             </form>
                                         </li>
                                         <li>
-                                            <a
-                                                href="#"
+                                            <Link
+                                                href="/dashboard" // Replace with your actual dashboard route
                                                 className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
                                             >
-                                                <svg
-                                                    className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 20 20"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                                                    <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                                                </svg>
+                                                <FaHome className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75" />
                                                 <span className="ml-3">
                                                     Dashboard
                                                 </span>
-                                            </a>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href="/books" // Replace with your actual books route
+                                                className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                                            >
+                                                <FaBook className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75" />
+                                                <span className="ml-3">
+                                                    Books
+                                                </span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href="/authors" // Replace with your actual authors route
+                                                className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                                            >
+                                                <FaUser className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75" />
+                                                <span className="ml-3">
+                                                    Authors
+                                                </span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href="/categories" // Replace with your actual categories route
+                                                className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                                            >
+                                                <FaTags className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75" />
+                                                <span className="ml-3">
+                                                    Categories
+                                                </span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href="/reviews" // Replace with your actual reviews route
+                                                className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                                            >
+                                                <FaStar className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75" />
+                                                <span className="ml-3">
+                                                    Reviews
+                                                </span>
+                                            </Link>
                                         </li>
                                     </ul>
                                     <div className="space-y-2 pt-2">

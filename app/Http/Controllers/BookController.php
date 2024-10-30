@@ -19,7 +19,7 @@ class BookController extends Controller
         $authors = Author::all();
         $categories = Category::all();
 
-        return inertia('Books/Index', [
+        return inertia('Books/Create', [
             'authors' => $authors,
             'categories' => $categories,
         ]);

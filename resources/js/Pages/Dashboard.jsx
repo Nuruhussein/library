@@ -2,7 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Sidebar from "@/Layouts/sidebar";
 import { Head } from "@inertiajs/react";
 
-export default function Dashboard() {
+export default function Dashboard({ children }) {
     return (
         <AuthenticatedLayout
             header={
@@ -13,7 +13,13 @@ export default function Dashboard() {
         >
             <Head title="Dashboard" />
 
-            <Sidebar />
+            <div className="flex">
+                <div>
+                    {" "}
+                    <Sidebar />
+                </div>
+                <div className="flex-1 p-6 bg-gray-100">{children}</div>
+            </div>
         </AuthenticatedLayout>
     );
 }
