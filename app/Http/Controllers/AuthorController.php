@@ -11,7 +11,7 @@ class AuthorController extends Controller
     // Display a list of all authors
     public function index()
     {
-        $authors = Author::all();
+     $authors = Author::withCount('books')->get();
         return Inertia::render('Authors/Index', ['authors' => $authors]);
     }
 
