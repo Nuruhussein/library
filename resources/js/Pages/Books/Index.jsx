@@ -8,7 +8,7 @@ const BooksIndex = ({ books, authors, categories }) => {
     // console.log(authors);
     return (
         <Dashboard>
-            <div className="mt-20 ml-60">
+            <div className="mt-20 ml-52">
                 {/* <CreateBookForm authors={authors} categories={categories} /> */}
 
                 <BookTable books={books} />
