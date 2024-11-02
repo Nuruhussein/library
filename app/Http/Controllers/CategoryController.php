@@ -15,11 +15,11 @@ class CategoryController extends Controller
         return Inertia::render('Categories/Index', ['categories' => $categories]);
     }
 
-    // Show the form for creating a new category
-    public function create()
-    {
-        return Inertia::render('Categories/Create');
-    }
+    // // Show the form for creating a new category
+    // public function create()
+    // {
+    //     return Inertia::render('Categories/Create');
+    // }
 
     // Store a newly created category in the database
     public function store(Request $request)

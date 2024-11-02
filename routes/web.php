@@ -24,9 +24,12 @@ Route::get('/', function () {
 Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/books/{book}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+// Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
