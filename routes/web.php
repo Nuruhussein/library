@@ -23,9 +23,14 @@ Route::get('/', function () {
 
 Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/books/{book}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
-Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
-Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/books/{book}/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::post('/reviews', [ReviewController::class, 'add'])->name('reviews.add');
 Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+
+
+ Route::post('/reviews', [ReviewController::class, 'add'])->name('reviews.add');
+// Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+// Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
 
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -38,9 +43,13 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
 Route::post('/books', [BookController::class, 'store'])->name('books.store');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
 Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+
+Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+
 Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
+
 
 Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
 Route::get('/authors/create', [AuthorController::class, 'create'])->name('authors.create');

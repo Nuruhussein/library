@@ -90,4 +90,78 @@ public function index()
             'book' => $book,
         ]);
     }
+
+    //   // Show the form to edit a specific book
+    // public function edit(Book $book)
+    // {
+    //     return Inertia::render('Books/Edit', ['book' => $book]);
+    // }
+    // Show the form for editing the specified book
+     public function edit(Book $book)
+    {
+        $categories = Category::all();
+        $authors = Author::all();
+
+        // Return an Inertia response instead of a Blade view
+        return Inertia::render('Books/Edit', [
+            'book' => $book,
+            'categories' => $categories,
+            'authors' => $authors,
+        ]);
+    }
+
+  public function update(Request $request, Book $book)
+{
+    // Validation rules
+    $request->validate([
+        'title' => 'nullable|string|max:255',
+        'author_id' => 'nullable|exists:authors,id',
+        'category_id' => 'nullable|exists:categories,id',
+        'description' => 'nullable|string',
+        'isbn' => 'nullable|string|max:13',
+        'publication_date' => 'nullable|date',
+        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    // Only update fields that are present in the request
+    if ($request->has('title')) {
+        $book->title = $request->input('title');
+    }
+    if ($request->has('author_id')) {
+        $book->author_id = $request->input('author_id');
+    }
+    if ($request->has('category_id')) {
+        $book->category_id = $request->input('category_id');
+    }
+    if ($request->has('description')) {
+        $book->description = $request->input('description');
+    }
+    if ($request->has('isbn')) {
+        $book->isbn = $request->input('isbn');
+    }
+    if ($request->has('publication_date')) {
+        $book->publication_date = $request->input('publication_date');
+    }
+    if ($request->hasFile('cover_image')) {
+    // Optional: Delete the old cover image if it exists
+    if ($book->cover_image) {
+        Storage::disk('public')->delete($book->cover_image);
+    }
+    // Store the new cover image
+    $book->cover_image = $request->file('cover_image')->store('covers', 'public');
+}
+
+    // Save the updated book
+    $book->save();
+
+    return redirect()->route('books.index')->with('success', 'Book updated successfully.');
+}
+
+
+  // Remove the specified book from storage
+    public function destroy(Book $book)
+    {
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
+    }
 }
