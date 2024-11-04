@@ -159,6 +159,7 @@ const BookTable = ({ books }) => {
                                             src={`/storage/${book.cover_image}`}
                                             alt={book.title}
                                             width="50"
+                                            className="rounded-full w-8 h-8"
                                         />
                                     ) : (
                                         "No Image"
