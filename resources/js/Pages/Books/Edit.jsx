@@ -1,9 +1,9 @@
 import React from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, router } from "@inertiajs/react";
 import Dashboard from "../Dashboard";
 
 const Edit = ({ book, categories, authors }) => {
-    const { data, setData, put, errors } = useForm({
+    const { data, setData, post, errors, progress } = useForm({
         title: book.title || "",
         author_id: book.author_id || "",
         category_id: book.category_id || "",
@@ -15,15 +15,15 @@ const Edit = ({ book, categories, authors }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route("books.update", book.id), {
-            data,
-            onSuccess: () => {
-                alert("Book updated successfully.");
-            },
+
+        post(`/books/${book.id}`, {
+            data: { ...data, _method: "put" },
+            onSuccess: () => alert("Book updated successfully."),
             onError: (errors) => {
-                console.error(errors); // Log errors to console for debugging
+                console.error(errors);
                 alert("An error occurred while updating the book.");
             },
+            forceFormData: true, // Important to handle file uploads with Inertia
         });
     };
 
@@ -33,6 +33,20 @@ const Edit = ({ book, categories, authors }) => {
                 <h1 className="text-2xl font-semibold text-gray-800 mb-4">
                     Edit Book
                 </h1>
+
+                {/* Display default cover image if it exists */}
+                {book.cover_image && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Current Cover Image
+                        </label>
+                        <img
+                            src={`/storage/${book.cover_image}`}
+                            alt="Current Cover"
+                            className="mt-1 w-32 h-48 object-cover border border-gray-300 rounded-md"
+                        />
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -158,10 +172,9 @@ const Edit = ({ book, categories, authors }) => {
                             </label>
                             <input
                                 type="file"
-                                onChange={(e) => {
-                                    const file = e.target.files[0];
-                                    setData("cover_image", file); // Set the selected file
-                                }}
+                                onChange={(e) =>
+                                    setData("cover_image", e.target.files[0])
+                                }
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             />
                             {errors.cover_image && (

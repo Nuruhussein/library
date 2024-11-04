@@ -91,11 +91,7 @@ public function index()
         ]);
     }
 
-    //   // Show the form to edit a specific book
-    // public function edit(Book $book)
-    // {
-    //     return Inertia::render('Books/Edit', ['book' => $book]);
-    // }
+  
     // Show the form for editing the specified book
      public function edit(Book $book)
     {
@@ -110,52 +106,35 @@ public function index()
         ]);
     }
 
-  public function update(Request $request, Book $book)
+
+public function update(Request $request, Book $book)
 {
-    // Validation rules
     $request->validate([
-        'title' => 'nullable|string|max:255',
-        'author_id' => 'nullable|exists:authors,id',
-        'category_id' => 'nullable|exists:categories,id',
+        'title' => 'required|string|max:255',
+        'author_id' => 'required|exists:authors,id',
+        'category_id' => 'required|exists:categories,id',
         'description' => 'nullable|string',
-        'isbn' => 'nullable|string|max:13',
+        'isbn' => 'nullable|string',
         'publication_date' => 'nullable|date',
-        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'cover_image' => 'nullable|image|max:2048', // validate image file
     ]);
 
-    // Only update fields that are present in the request
-    if ($request->has('title')) {
-        $book->title = $request->input('title');
-    }
-    if ($request->has('author_id')) {
-        $book->author_id = $request->input('author_id');
-    }
-    if ($request->has('category_id')) {
-        $book->category_id = $request->input('category_id');
-    }
-    if ($request->has('description')) {
-        $book->description = $request->input('description');
-    }
-    if ($request->has('isbn')) {
-        $book->isbn = $request->input('isbn');
-    }
-    if ($request->has('publication_date')) {
-        $book->publication_date = $request->input('publication_date');
-    }
     if ($request->hasFile('cover_image')) {
-    // Optional: Delete the old cover image if it exists
-    if ($book->cover_image) {
-        Storage::disk('public')->delete($book->cover_image);
+        // Store the new cover image and delete the old one if necessary
+        $coverPath = $request->file('cover_image')->store('covers', 'public');
+        $validatedData['cover_image'] = $coverPath;
+
+        // Optional: delete the old cover image if it exists
+        if ($book->cover_image) {
+            Storage::disk('public')->delete($book->cover_image);
+        }
     }
-    // Store the new cover image
-    $book->cover_image = $request->file('cover_image')->store('covers', 'public');
+
+    $book->update($validatedData);
+
+    return redirect()->back()->with('success', 'Book updated successfully.');
 }
 
-    // Save the updated book
-    $book->save();
-
-    return redirect()->route('books.index')->with('success', 'Book updated successfully.');
-}
 
 
   // Remove the specified book from storage
